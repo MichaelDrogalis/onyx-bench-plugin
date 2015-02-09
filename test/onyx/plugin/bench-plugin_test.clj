@@ -63,10 +63,15 @@
 
 (def workflow [[:in :inc] [:inc :no-op]])
 
+(def ports (atom 49999))
+
+(defmethod l-ext/inject-lifecycle-resources :in
+  [_ _] {:http/port (swap! ports inc)})
+
 (defmethod l-ext/inject-lifecycle-resources :no-op
   [_ _] {:core.async/out-chan (chan (dropping-buffer 1))})
 
-(def v-peers (onyx.api/start-peers! 3 peer-config))
+(onyx.api/start-peers! 3 peer-config)
 
 (onyx.api/submit-job
  peer-config

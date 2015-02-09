@@ -17,7 +17,7 @@
 (defmethod l-ext/inject-lifecycle-resources :http/listen
   [_ event]
   (let [ch (chan 100000)
-        s (server/run-server (partial async-handler-http ch) {:port 0})]
+        s (server/run-server (partial async-handler-http ch) {:port (:http/port event)})]
     (prn (meta s))
     {:http/read-ch ch
      :http/server s
